@@ -1,0 +1,195 @@
+
+package com.mycompany.jogo_da_velha;
+
+import java.util.Random;
+import java.util.Scanner;
+
+
+public class Jogo_da_velha {
+
+    public static void main(String[] args) {
+
+        Scanner ler = new Scanner(System.in);
+        Random random = new Random();
+
+        int linha;
+        int coluna;
+        int jogador = 1;
+
+        // Criando o tabuleiro
+        // 0 = vazio
+        // 1 = jogador
+        // 2 = máquina
+        int[][] tabuleiro = new int[3][3];
+
+        boolean jogoTerminou = false;
+
+        while (!jogoTerminou) {
+
+          
+            System.out.println("\nSua vez!");
+
+            System.out.println("Escolha uma linha (0 a 2): ");
+            linha = ler.nextInt();
+
+            System.out.println("Escolha uma coluna (0 a 2): ");
+            coluna = ler.nextInt();
+
+            // Verifica se a posição está disponível
+            if (tabuleiro[linha][coluna] == 0) {
+
+                tabuleiro[linha][coluna] = jogador;
+
+                System.out.println("Jogada realizada!");
+
+            } else {
+
+                System.out.println("Essa posição já está ocupada!");
+                continue;
+            }
+
+
+            mostrarTabuleiro(tabuleiro);
+
+         
+            if (verificarVitoria(tabuleiro, 1)) {
+
+                System.out.println("\nVocê venceu!");
+                jogoTerminou = true;
+                break;
+            }
+
+       
+            if (verificarEmpate(tabuleiro)) {
+
+                System.out.println("\nO jogo terminou em empate!");
+                jogoTerminou = true;
+                break;
+            }
+
+
+            System.out.println("\nVez da máquina...");
+
+            do {
+                linha = random.nextInt(3);
+                coluna = random.nextInt(3);
+            } while (tabuleiro[linha][coluna] != 0);
+
+            tabuleiro[linha][coluna] = 2;
+
+            System.out.println("A máquina jogou na linha "
+                    + linha + " e coluna " + coluna);
+
+            // Mostra o tabuleiro novamente
+            mostrarTabuleiro(tabuleiro);
+
+
+            if (verificarVitoria(tabuleiro, 2)) {
+
+                System.out.println("\nA máquina venceu!");
+                jogoTerminou = true;
+                break;
+            }
+
+
+            if (verificarEmpate(tabuleiro)) {
+
+                System.out.println("\nO jogo terminou em empate!");
+                jogoTerminou = true;
+                break;
+            }
+        }
+
+        ler.close();
+    }
+
+ 
+    public static boolean verificarVitoria(int[][] tabuleiro, int jogador) {
+
+        // Verifica as linhas
+        for (int linha = 0; linha < 3; linha++) {
+
+            if (tabuleiro[linha][0] == jogador &&
+                tabuleiro[linha][1] == jogador &&
+                tabuleiro[linha][2] == jogador) {
+
+                return true;
+            }
+        }
+
+        // Verifica as colunas
+        for (int coluna = 0; coluna < 3; coluna++) {
+
+            if (tabuleiro[0][coluna] == jogador &&
+                tabuleiro[1][coluna] == jogador &&
+                tabuleiro[2][coluna] == jogador) {
+
+                return true;
+            }
+        }
+
+        // Verifica diagonal principal
+        if (tabuleiro[0][0] == jogador &&
+            tabuleiro[1][1] == jogador &&
+            tabuleiro[2][2] == jogador) {
+
+            return true;
+        }
+
+        // Verifica diagonal secundária
+        if (tabuleiro[0][2] == jogador &&
+            tabuleiro[1][1] == jogador &&
+            tabuleiro[2][0] == jogador) {
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static boolean verificarEmpate(int[][] tabuleiro) {
+
+        for (int linha = 0; linha < 3; linha++) {
+
+            for (int coluna = 0; coluna < 3; coluna++) {
+
+                // Se encontrar uma posição vazia,
+                // ainda não houve empate
+                if (tabuleiro[linha][coluna] == 0) {
+
+                    return false;
+                }
+            }
+        }
+
+        // Todas as posições estão ocupadas
+        return true;
+    }
+
+
+
+    public static void mostrarTabuleiro(int[][] tabuleiro) {
+
+        System.out.println();
+
+        for (int linha = 0; linha < 3; linha++) {
+
+            for (int coluna = 0; coluna < 3; coluna++) {
+
+                System.out.print(tabuleiro[linha][coluna]);
+
+                if (coluna < 2) {
+                    System.out.print(" | ");
+                }
+            }
+
+            System.out.println();
+
+            if (linha < 2) {
+                System.out.println("--+---+--");
+            }
+        }
+
+        System.out.println();
+    }
+}
